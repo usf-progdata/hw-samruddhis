@@ -1,6 +1,10 @@
-# Homework Template
+#What is a Repository?
 
-This is template repository for hosting and posting your homework assignments for Programming with Data.
+A repository is a central location to store files (such as R scripts or R markdown Files).
+
+##How do you Navigate a Repository?
+
+#About the Student
 
 Hello world!
 
