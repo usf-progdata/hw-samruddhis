@@ -1,0 +1,15 @@
+---
+title: "hw01_exploring_data"
+author: "Samruddhi Shinde"
+date: "1/24/2021"
+output: html_document
+---
+
+In this document, we will explore the the palmerpenguins dataset.
+
+```{r}
+library(palmerpenguins)
+
+print(penguins)
+```
+
