@@ -2,7 +2,7 @@
 
 A **repository** is a central location to store files (such as R scripts or R markdown Files).
 
-### How do you Navigate a Repository? :thought_balloon:
+## How do you Navigate a Repository? :thought_balloon:
 
 Welcome to my repository! It is located on GitHub: a platform that specifically stores code.
 
