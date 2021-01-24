@@ -14,4 +14,6 @@ This is where I practice & submit code for the course [Programming with Data](ht
 
 # About the Student
 
-Hello!
+Hello! My name is Sam and I'm a third year undergraduate student majoring in Psychology & Behavioral Healthcare. 
+
+![](https://media.giphy.com/media/xlcR4sYSBT34fQqApS/giphy.gif)
