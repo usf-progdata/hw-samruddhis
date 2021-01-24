@@ -7,8 +7,8 @@ A **repository** is a central location to store files (such as R scripts or R ma
 Welcome to my repository! It is located on GitHub: a platform that specifically stores code.
 
 There are currently two branches:
--the master branch
--the hw01 branch
+- the master branch
+- the hw01 branch
 
 This is where I practice & submit code for the course [Programming with Data](https://progdata.netlify.app/#about)!
 
