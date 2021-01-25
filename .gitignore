@@ -38,6 +38,10 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
+<<<<<<< HEAD
 #Remove cached .DS_Store
 git rm --cached .DS_Store
 
+=======
+.DS_Store
+>>>>>>> 06e4ee1c82172b631c76f63293487b849e7035d7
