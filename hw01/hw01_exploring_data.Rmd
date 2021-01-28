@@ -2,7 +2,9 @@
 title: "hw01_exploring_data"
 author: "Samruddhi Shinde"
 date: "1/24/2021"
-output: html_document
+output:
+  github_document: default
+  html_document: default
 ---
 
 ```{r}
