@@ -34,6 +34,9 @@ summary(penguins)
 #### Histogram
 
 You can also make visualizations using the data set
+
+<!-- Place a blank line between paragraphs, headings, starts and ends of lists, code blocks, etc. to ensure things are properly formatted in the output. -->
+
 ```{r}
 hist(penguins$body_mass_g)
 ```
