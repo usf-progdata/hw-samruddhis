@@ -1,3 +1,7 @@
+<!-- Great work! Just a few comments. -->
+
+<!-- After you merge a branch back into master, please delete the branch to keep your repo tidy. --> 
+
 # What is a Repository? :bulb:
 
 A **repository** is a central location to store files (such as R scripts or R markdown Files).
