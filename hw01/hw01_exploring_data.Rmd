@@ -1,0 +1,40 @@
+---
+title: "hw01_exploring_data"
+author: "Samruddhi Shinde"
+date: "1/24/2021"
+output:
+  html_document: default
+  github_document: default
+---
+
+```{r}
+library(palmerpenguins)
+```
+
+### In this document, we will explore the the palmerpenguins dataset.
+
+#### Rows and Columns
+
+This data set has 344 rows & 8 columns.
+
+```{r}
+nrow(penguins)
+```
+```{r}
+ncol(penguins)
+```
+
+#### Summary of Data Set
+
+This function provides a summary of the data set
+```{r}
+summary(penguins)
+```
+
+#### Histogram
+
+You can also make visualizations using the data set
+```{r}
+hist(penguins$body_mass_g)
+```
+
