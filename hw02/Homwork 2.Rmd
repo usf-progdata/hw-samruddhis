@@ -48,3 +48,17 @@ gapminder %>%
   summarize(max(gdpPercap))
 ```
 
+##1.5
+
+Scatter plot of Canada's Life expectancy vs GDP per capita
+```{r}
+gapminder %>%
+  filter(country == "Canada") %>%
+  ggplot +
+    aes(x = gdpPercap, y = lifeExp) +
+    geom_point() + 
+    scale_x_log10("GDP per capita", labels = scales::dollar_format()) +
+    ylab("Life Expectancy") +
+    theme_bw()
+```
+
