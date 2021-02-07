@@ -32,3 +32,19 @@ gapminder %>%
 ```
 
 ##1.3 
+
+Create new variable for thr change in life expectancy
+```{r}
+gapminder %>%
+   mutate(change_in_lifeExp = lifeExp - lag(lifeExp))
+```
+
+##1.4
+
+Filter gapminder dataset to show the max GDP per capita for each country
+```{r}
+gapminder %>%
+  group_by(country) %>%
+  summarize(max(gdpPercap))
+```
+
