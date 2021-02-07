@@ -1,0 +1,18 @@
+---
+title: "Homework 2"
+author: "Samruddhi Shinde"
+date: "2/7/2021"
+output:
+  html_document: default
+  github_document: default
+---
+#Exercise 1
+
+##1.1 
+
+Loading in packages needed for assignments
+```{r}
+library(tidyverse)
+library(gapminder)
+```
+
