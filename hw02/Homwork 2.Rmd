@@ -59,6 +59,38 @@ gapminder %>%
     geom_point() + 
     scale_x_log10("GDP per capita", labels = scales::dollar_format()) +
     ylab("Life Expectancy") +
-    theme_bw()
+    ggtitle("Canada's Life Expectancy vs GDP per Capita")
+```
+
+#Excerise 2
+
+##2.1
+
+Loading in packages for exercise 
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+Summarize bill length and bill depth
+```{r}
+palmerpenguins::penguins %>%
+  select(bill_length_mm, bill_depth_mm) %>%
+  summarize(
+    meanLength = mean(bill_length_mm, na.rm = TRUE),
+    sdLength = sd(bill_length_mm, na.rm = TRUE),
+    meanDepth = mean(bill_depth_mm, na.rm = TRUE),
+    sdDepth = sd(bill_depth_mm, na.rm = TRUE))
+```
+
+Scatter plot comparing bill length and bill depth
+```{r}
+palmerpenguins::penguins %>%
+  ggplot +
+    aes(x = bill_length_mm, y = bill_depth_mm) +
+    geom_point(alpha = 0.5) +
+    scale_x_log10("Bill Length") +
+    ylab("Bill Depth")
 ```
 
