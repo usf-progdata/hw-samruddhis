@@ -16,3 +16,9 @@ library(tidyverse)
 library(gapminder)
 ```
 
+Filter dataset to show 3 countries (Mexico, Pakistan, & Zimbabwe) from the 1970s
+```{r}
+gapminder %>%
+  filter(country %in% c("Mexico","Pakistan", "Zimbabwe") & year %in% c(1970:1979))
+```
+
