@@ -94,3 +94,42 @@ palmerpenguins::penguins %>%
     ylab("Bill Depth")
 ```
 
+##2.2
+
+Sample size of population
+```{r}
+palmerpenguins::penguins %>%
+  select(species, body_mass_g) %>%
+    summarize(rows = n())
+```
+
+Body mass categorized by species
+```{r}
+palmerpenguins::penguins %>%
+  select(species, body_mass_g) %>%
+  group_by(species) %>%
+    summarize(meanMass = mean(body_mass_g, na.rm = TRUE))
+```
+
+Histogram comparing body mass among different species of penguins
+```{r}
+palmerpenguins::penguins %>%
+  ggplot +
+    aes(x = species, y = body_mass_g) +
+    geom_bar(stat="identity", width = 0.5)
+```
+
+#Bonus Exercise
+
+The following code was provided 
+```{r}
+filter(gapminder, country == c("Rwanda", "Afghanistan"))
+```
+
+While the goal of this code is to get all data for Rwanda and Afghanistan, it does not work. The "==" function alternates the search for Rwanda and Afghanistan; it does not search for these countries simultaneously. 
+
+To accomplish the intended goal, one must use the %in% function instead
+```{r}
+filter(gapminder, country %in% c("Rwanda", "Afghanistan"))
+```
+This now lists all of the data for Rwanda and Afghanistan.
