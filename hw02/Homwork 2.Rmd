@@ -114,6 +114,7 @@ palmerpenguins::penguins %>%
 
 Histogram comparing body mass among different species of penguins
 ```{r}
+options(scipen = 999)
 palmerpenguins::penguins %>%
   ggplot +
     aes(x = species, y = body_mass_g) +
