@@ -46,7 +46,7 @@ Filter gapminder dataset to show the max GDP per capita for each country
 ```{r}
 gapminder %>%
   group_by(country) %>%
-  summarize(max(gdpPercap))
+  filter(gdpPercap == max(gdpPercap))
 ```
 
 ##1.5
@@ -60,7 +60,7 @@ gapminder %>%
     geom_point() + 
     scale_x_log10("GDP per capita", labels = scales::dollar_format()) +
     ylab("Life Expectancy") +
-    ggtitle("Canada's Life Expectancy vs GDP per Capita")
+    ggtitle("Canada's GDP per Capita vs Life Expectancy")
 ```
 
 #Excerise 2
@@ -77,12 +77,12 @@ library(tidyverse)
 Summarize bill length and bill depth
 ```{r}
 palmerpenguins::penguins %>%
-  select(bill_length_mm, bill_depth_mm) %>%
-  summarize(
-    meanLength = mean(bill_length_mm, na.rm = TRUE),
-    sdLength = sd(bill_length_mm, na.rm = TRUE),
-    meanDepth = mean(bill_depth_mm, na.rm = TRUE),
-    sdDepth = sd(bill_depth_mm, na.rm = TRUE))
+   summarize(
+  across(c(bill_length_mm, bill_depth_mm),
+  list(mean = ~ mean(.x, na.rm = TRUE),
+      sd = ~ sd(.x, na.rm = TRUE),
+      min = ~ min(.x, na.rm = TRUE),
+      max = ~ max(.x, na.rm = TRUE))))
 ```
 
 Scatter plot comparing bill length and bill depth
@@ -97,22 +97,16 @@ palmerpenguins::penguins %>%
 
 ##2.2
 
-Sample size of population
-```{r}
-palmerpenguins::penguins %>%
-  select(species, body_mass_g) %>%
-    summarize(rows = n())
-```
-
-Body mass categorized by species
+Sample size of population & body mass categorized by species
 ```{r}
 palmerpenguins::penguins %>%
   select(species, body_mass_g) %>%
   group_by(species) %>%
-    summarize(meanMass = mean(body_mass_g, na.rm = TRUE))
+    summarize(meanMass = mean(body_mass_g, na.rm = TRUE),
+              rows = n())
 ```
 
-Histogram comparing body mass among different species of penguins
+Bar chart comparing body mass among different species of penguins
 ```{r}
 options(scipen = 999)
 palmerpenguins::penguins %>%
