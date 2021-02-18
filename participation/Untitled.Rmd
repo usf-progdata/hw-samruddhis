@@ -1,0 +1,107 @@
+---
+title: "2/9/2021"
+author: "Samruddhi Shinde"
+date: "2/9/2021"
+output: html_document
+---
+
+1. Use the `psych::bfi` dataset.
+
+```{r}
+library(psych)
+library(tidyverse)
+```
+
+2. Compute mean scores for each of the Big Five traits for each person.
+
+```{r}
+psych::bfi %>%
+  rowwise() %>%
+  mutate(Agree_total = mean(c_across(A1:A5), na.rm = TRUE),
+         Conc_total = mean(c_across(C1:C5), na.rm = TRUE),
+         Open_total = mean(c_across(O1:O5), na.rm = TRUE),
+         Neuro_total = mean(c_across(N1:N5), na.rm = TRUE),
+         Extra_total = mean(c_across(E1:E5), na.rm = TRUE)) %>%
+  select(Agree_total, Conc_total, Open_total, Neuro_total, Extra_total)
+  
+```
+
+3. Keep just Big Five scores, gender, age, and education.
+
+```{r}
+psych::bfi %>%
+  rowwise() %>%
+  mutate(Agree_total = mean(c_across(A1:A5), na.rm = TRUE),
+         Conc_total = mean(c_across(C1:C5), na.rm = TRUE),
+         Open_total = mean(c_across(O1:O5), na.rm = TRUE),
+         Neuro_total = mean(c_across(N1:N5), na.rm = TRUE),
+         Extra_total = mean(c_across(E1:E5), na.rm = TRUE)) %>%
+  select(Agree_total, Conc_total, Open_total, Neuro_total, Extra_total, age, education, gender)
+```
+
+4. Summarize the mean, standard deviation, minimum, and maximum values for the Big Five scores separately by gender groups.
+
+```{r}
+psych::bfi %>%
+  group_by(gender) %>%
+    summarize(
+      meanA = mean(c_across(A1:A5), na.rm = TRUE),
+      sdA = sd(c_across(A1:A5), na.rm = TRUE),
+      minA = min(c_across(A1:A5), na.rm = TRUE),
+      maxA = max(c_across(A1:A5), na.rm = TRUE),
+      meanO = mean(c_across(O1:O5), na.rm = TRUE),
+      sdO = sd(c_across(O1:O5), na.rm = TRUE),
+      minO = min(c_across(O1:O5), na.rm = TRUE),
+      maxO = max(c_across(O1:O5), na.rm = TRUE),
+      meanE = mean(c_across(E1:E5), na.rm = TRUE),
+      sdE = sd(c_across(E1:E5), na.rm = TRUE),
+      minE = min(c_across(E1:E5), na.rm = TRUE),
+      maxE = max(c_across(E1:E5), na.rm = TRUE),
+      meanN = mean(c_across(N1:N5), na.rm = TRUE),
+      sdN = sd(c_across(N1:N5), na.rm = TRUE),
+      minN = min(c_across(N1:N5), na.rm = TRUE),
+      maxN = max(c_across(N1:N5), na.rm = TRUE),
+      meanC = mean(c_across(C1:C5), na.rm = TRUE),
+      sdC = sd(c_across(C1:C5), na.rm = TRUE),
+      minC = min(c_across(C1:C5), na.rm = TRUE),
+      maxC = max(c_across(C1:C5), na.rm = TRUE))
+```
+
+```{r}
+psych::bfi %>%
+  group_by(gender) %>%
+    summarize(c(A1:O5)
+              list(mean = ~ mean(.x, na.rm = TRUE),
+                   sd = ~ sd(.x, na.rm = TRUE),
+                   min = ~ min(.x, na.rm = TRUE),
+                   max = ~ max(.x, na.rm = TRUE)))
+```
+
+
+5. Summarize the mean, standard deviation, minimum, and maximum values for the Big Five scores separately by educational level groups.
+
+```{r}
+psych::bfi %>%
+  group_by(education) %>%
+    summarize(
+      meanA = mean(c_across(A1:A5), na.rm = TRUE),
+      sdA = sd(c_across(A1:A5), na.rm = TRUE),
+      minA = min(c_across(A1:A5), na.rm = TRUE),
+      maxA = max(c_across(A1:A5), na.rm = TRUE),
+      meanO = mean(c_across(O1:O5), na.rm = TRUE),
+      sdO = sd(c_across(O1:O5), na.rm = TRUE),
+      minO = min(c_across(O1:O5), na.rm = TRUE),
+      maxO = max(c_across(O1:O5), na.rm = TRUE),
+      meanE = mean(c_across(E1:E5), na.rm = TRUE),
+      sdE = sd(c_across(E1:E5), na.rm = TRUE),
+      minE = min(c_across(E1:E5), na.rm = TRUE),
+      maxE = max(c_across(E1:E5), na.rm = TRUE),
+      meanN = mean(c_across(N1:N5), na.rm = TRUE),
+      sdN = sd(c_across(N1:N5), na.rm = TRUE),
+      minN = min(c_across(N1:N5), na.rm = TRUE),
+      maxN = max(c_across(N1:N5), na.rm = TRUE),
+      meanC = mean(c_across(C1:C5), na.rm = TRUE),
+      sdC = sd(c_across(C1:C5), na.rm = TRUE),
+      minC = min(c_across(C1:C5), na.rm = TRUE),
+      maxC = max(c_across(C1:C5), na.rm = TRUE))
+```
