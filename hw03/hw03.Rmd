@@ -14,32 +14,29 @@ For your assignment, do the following.
   1. Inspect the item responses (e.g., with graphs or by summarizing distinct values). 
      Is anything unusual?
      
+Based on the printed summary, there are -99 values in the dataset. These values need to be recoded as missing
 
 ```{r}
-tibble(green_data)
-```
-     
-```{r}
-summary(green_data$green1)
+green_data %>%
+  summary()
 ```
   
+The na_if function coverts values to "NA"
+
 ```{r}
-green_data %>%
-  ggplot() +
-  aes(x = "id", y= "green1")
-  geom_point()
+new_green_data <- green_data %>%
+  na_if("-99")
 ```
+  
+The new set of data does not have any -99 values
+  
+```{r}
+new_green_data %>%
+  summary()
+```  
 
   2. Compute total scores for the four scales. 
      Recode variables as needed.
-     
-```{r}
-green_data %>%
-  summarize(
-    across(c(green1, green2, green3, green4, green5),
-    list(mean = ~ mean(.x, na.rm = TRUE))))
-```
-
      
   3. Rescale the variables so that they go from 0-100 instead of the original range.
      Name the recaled variables `*_pomp`.
