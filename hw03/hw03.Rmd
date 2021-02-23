@@ -24,14 +24,14 @@ green_data %>%
 The na_if function coverts values to "NA"
 
 ```{r}
-new_green_data <- green_data %>%
+green_data <- green_data %>%
   na_if("-99")
 ```
   
 The new set of data does not have any -99 values
   
 ```{r}
-new_green_data %>%
+green_data %>%
   summary()
 ```  
 
@@ -41,7 +41,7 @@ new_green_data %>%
 ```{r}
 reversed <- c("green2","comp6","comp7","comp8","comp9","comp10","intel7","intel8","intel9","intel10","open7","open8","open9","open10")
 
-new_green_data <- new_green_data %>%
+green_data <- green_data %>%
   mutate(
     across(all_of(reversed),
            ~ recode(.x, "1" = 5, "2" = 4, "4" = 2, "5" = 1),
@@ -49,29 +49,50 @@ new_green_data <- new_green_data %>%
 ```
 
 ```{r}
-new_green_data <- 
-  new_green_data %>% 
+green_data <- 
+  green_data %>% 
   rowwise() %>% 
-  mutate(green_tot = mean(c(green1, green2r, green3, green4, green5), na.rm = TRUE),
-         comp_tot = mean(c(comp1, comp2, comp3, comp4, comp5, comp6r, comp7r, comp8r, comp9r, comp10r), 
-                         na.rm = TRUE),
-         intel_tot = mean(c(intel1, intel2, intel3, intel4, intel5, intel6, intel7r, intel8r, intel9r, intel10r),
-                          na.rm = TRUE),
-         open_tot = mean(c(open1, open2, open3, open4, open5, open6, open7r, open8r, open9r, open10r), 
-                         na.rm = TRUE))
+  mutate(
+    green_tot = mean(c(green1, green2r, green3, green4, green5), na.rm = TRUE),
+    comp_tot = mean(c(comp1, comp2, comp3, comp4, comp5, comp6r, comp7r, comp8r, comp9r, comp10r), na.rm = TRUE),
+    intel_tot = mean(c(intel1, intel2, intel3, intel4, intel5, intel6, intel7r, intel8r, intel9r, intel10r), na.rm = TRUE),
+    open_tot = mean(c(open1, open2, open3, open4, open5, open6, open7r, open8r, open9r, open10r), na.rm = TRUE)
+    )
 ```
 
   3. Rescale the variables so that they go from 0-100 instead of the original range.
      Name the recaled variables `*_pomp`.
      
 ```{r}
-new_green_data <- 
-  new_green_data %>% 
+green_data <- 
+  green_data %>% 
   rowwise() %>% 
   mutate(
+    across(c(green1:open10r),
+    ~ recode(.x, "1" = 0, "2" = 25, "3" = 50, "4" = 75, "5" = 100),
+    .names = "{.col}_pomp"))
+
+green_data <- 
+  green_data %>% 
+  rowwise() %>% 
+  mutate(
+    green_pomp = sum(c(green1_pomp,green2r_pomp,green3_pomp,green4_pomp,green5_pomp), na.rm = TRUE),
+    comp_pomp = sum(c(comp1_pomp,comp2_pomp,comp3_pomp,comp4_pomp,comp5_pomp,comp6r_pomp,comp7r_pomp, comp8r_pomp,comp9r_pomp,comp10r_pomp), na.rm = TRUE),
+    intel_pomp = sum(c(intel1_pomp,intel2_pomp,intel3_pomp,intel4_pomp,intel5_pomp,intel6_pomp,intel7r_pomp, intel8r_pomp,intel9r_pomp,intel10r_pomp), na.rm = TRUE),
+    open_pomp = sum(c(open1_pomp,open2_pomp,open3_pomp,open4_pomp,open5_pomp,open6_pomp,open7r_pomp, open8r_pomp,open9r_pomp,open10r_pomp), na.rm = TRUE)) 
+
+summarize(new_green_data)
 ```
      
   4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
+  
+```{r}
+new_green_data %>%
+  aes(x= green_pomp) +
+  geom_point()
+```
+  
+  
   5. Make scatterplots showing the relationships between **green reputation** and each personality trait.
      Include trend lines for **students** and **non-students**.
      What do these plots show?
