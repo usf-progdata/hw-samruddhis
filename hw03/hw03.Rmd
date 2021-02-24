@@ -1,3 +1,12 @@
+---
+title: "Homework 3"
+author: "Sam Shinde"
+date: "2/24/2021"
+output: 
+  github_document: default
+  html_document: default
+---
+
 # Homework 03
 
 You will analyze data looking at the relationship between **green reputation** and three personality traits--**compassion**, **intellectual curiosity**, and **openness to experiences**.
@@ -7,6 +16,7 @@ The dataset includes data from **students** and **non-students**.
 dictionary <- readr::read_csv("green_dictionary.csv")
 green_data <- readr::read_csv("green_data.csv")
 library(tidyverse)
+library(ggdist)
 ```
 
 For your assignment, do the following.
@@ -38,6 +48,8 @@ green_data %>%
   2. Compute total scores for the four scales. 
      Recode variables as needed.
 
+Some of the items are reverse coded, so they must be recoded. Additionally, the student variable needs to be recorded as a factor.
+
 ```{r}
 reversed <- dictionary %>%
   filter(Keying == -1) %>%
@@ -49,8 +61,12 @@ green_data <- green_data %>%
            ~ recode(.x, "1" = 5, "2" = 4, "4" = 2, "5" = 1),
            .names = "{.col}r"))
 
+green_data$student <- recode_factor(green_data$student, '1' = "Non-student", '2' = "Student")
+
 print(green_data)
 ```
+
+The following formulas calculate the average mean of the total scores in each category
 
 ```{r}
 green_data <- green_data %>% 
@@ -66,6 +82,8 @@ green_data <- green_data %>%
   3. Rescale the variables so that they go from 0-100 instead of the original range.
      Name the recaled variables `*_pomp`.
      
+The score values must be recoded to be on a 0-100 scale. Then we can calculate the mean for each category.
+     
 ```{r}
 green_data <- 
   green_data %>% 
@@ -79,20 +97,14 @@ green_data <-
   green_data %>% 
   rowwise() %>% 
   mutate(
-    green_pomp = sum(c(green1_pomp,green2r_pomp,green3_pomp,green4_pomp,green5_pomp), na.rm = TRUE),
-    comp_pomp = sum(c(comp1_pomp,comp2_pomp,comp3_pomp,comp4_pomp,comp5_pomp,comp6r_pomp,comp7r_pomp, comp8r_pomp,comp9r_pomp,comp10r_pomp), na.rm = TRUE),
-    intel_pomp = sum(c(intel1_pomp,intel2_pomp,intel3_pomp,intel4_pomp,intel5_pomp,intel6_pomp,intel7r_pomp, intel8r_pomp,intel9r_pomp,intel10r_pomp), na.rm = TRUE),
-    open_pomp = sum(c(open1_pomp,open2_pomp,open3_pomp,open4_pomp,open5_pomp,open6_pomp,open7r_pomp, open8r_pomp,open9r_pomp,open10r_pomp), na.rm = TRUE)) 
+    green_pomp = mean(c(green1_pomp,green2r_pomp,green3_pomp,green4_pomp,green5_pomp), na.rm = TRUE),
+    comp_pomp = mean(c(comp1_pomp,comp2_pomp,comp3_pomp,comp4_pomp,comp5_pomp,comp6r_pomp,comp7r_pomp, comp8r_pomp,comp9r_pomp,comp10r_pomp), na.rm = TRUE),
+    intel_pomp = mean(c(intel1_pomp,intel2_pomp,intel3_pomp,intel4_pomp,intel5_pomp,intel6_pomp,intel7r_pomp, intel8r_pomp,intel9r_pomp,intel10r_pomp), na.rm = TRUE),
+    open_pomp = mean(c(open1_pomp,open2_pomp,open3_pomp,open4_pomp,open5_pomp,open6_pomp,open7r_pomp, open8r_pomp,open9r_pomp,open10r_pomp), na.rm = TRUE)) 
 ```
-
-```{r}
-green_data %>%
-  summary(green_pomp)
-```
-
 
   4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
-  
+
 ```{r}
 ggplot(green_data) +
   aes(x = green_pomp) +
@@ -128,7 +140,8 @@ green_data %>%
       group = student,
       color = student,
       fill = student) +
-  geom_jitter()
+  geom_jitter() +
+  geom_smooth(method = "lm")
 
 green_data %>% 
   filter(!is.na(student)) %>% 
@@ -138,7 +151,8 @@ green_data %>%
       group = student,
       color = student,
       fill = student) +
-  geom_jitter()
+  geom_jitter() +
+  geom_smooth(method = "lm")
   
 green_data %>% 
   filter(!is.na(student)) %>% 
@@ -148,13 +162,23 @@ green_data %>%
       group = student,
       color = student,
       fill = student) +
-  geom_jitter()
+  geom_jitter() +
+  geom_smooth(method = "lm")
 ```
      
   6. Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
   
 ```{r}
-
+green_data %>%
+  filter(!is.na(student)) %>% 
+  ggplot() +
+    aes(y = student, x = green_pomp, na.omit, color = student) +
+    geom_jitter(height = 0.2) +
+    geom_boxplot(alpha = .5,
+               width = .1,
+               size = .5) +
+    ggdist::stat_slab(height = .3,
+                      position = position_nudge(y = .4))
 ```
   
   
@@ -187,6 +211,3 @@ summary_green <- green_data %>%
 
 print(summary_green)
 ```
-  
-  
-In your assignment, prepare an RMarkdown file that includes both the coding and (for 4-7) narrative descriptions of your results.
