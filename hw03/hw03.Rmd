@@ -1,0 +1,221 @@
+---
+title: "Homework 3"
+author: "Sam Shinde"
+date: "2/24/2021"
+output: 
+  github_document: default
+  html_document: default
+---
+
+# Homework 03
+
+You will analyze data looking at the relationship between **green reputation** and three personality traits--**compassion**, **intellectual curiosity**, and **openness to experiences**.
+The dataset includes data from **students** and **non-students**.
+
+```{r}
+dictionary <- readr::read_csv("green_dictionary.csv")
+green_data <- readr::read_csv("green_data.csv")
+library(tidyverse)
+library(ggdist)
+```
+
+For your assignment, do the following.
+
+  1. Inspect the item responses (e.g., with graphs or by summarizing distinct values). 
+     Is anything unusual?
+     
+Based on the printed summary, there are -99 values in the dataset. These values need to be recoded as missing
+
+```{r}
+green_data %>%
+  summary()
+```
+  
+The na_if function coverts values to "NA"
+
+```{r}
+green_data <- green_data %>%
+  na_if("-99")
+```
+  
+The new set of data does not have any -99 values
+  
+```{r}
+green_data %>%
+  summary()
+```  
+
+  2. Compute total scores for the four scales. 
+     Recode variables as needed.
+
+Some of the items are reverse coded, so they must be recoded. Additionally, the student variable needs to be recorded as a factor.
+
+```{r}
+reversed <- dictionary %>%
+  filter(Keying == -1) %>%
+  pull(Item)
+
+green_data <- green_data %>%
+  mutate(
+    across(all_of(reversed),
+           ~ recode(.x, "1" = 5, "2" = 4, "4" = 2, "5" = 1),
+           .names = "{.col}r"))
+
+green_data$student <- recode_factor(green_data$student, '1' = "Non-student", '2' = "Student")
+
+print(green_data)
+```
+
+The following formulas calculate the average mean of the total scores in each category
+
+```{r}
+green_data <- green_data %>% 
+  rowwise() %>% 
+  mutate(
+    .id = id,
+    green_total = mean(c(green1, green2r, green3, green4, green5), na.rm = TRUE),
+    comp_total = mean(c(comp1, comp2, comp3, comp4, comp5, comp6r, comp7r, comp8r, comp9r, comp10r), na.rm = TRUE),
+    intel_total = mean(c(intel1, intel2, intel3, intel4, intel5, intel6, intel7r, intel8r, intel9r, intel10r), na.rm = TRUE),
+    open_total = mean(c(open1, open2, open3, open4, open5, open6, open7r, open8r, open9r, open10r), na.rm = TRUE))
+```
+
+  3. Rescale the variables so that they go from 0-100 instead of the original range.
+     Name the recaled variables `*_pomp`.
+     
+The score values must be recoded to be on a 0-100 scale. Then we can calculate the mean for each category.
+     
+```{r}
+green_data <- 
+  green_data %>% 
+  rowwise() %>% 
+  mutate(
+    across(c(green1:open10r),
+    ~ recode(.x, "1" = 0, "2" = 25, "3" = 50, "4" = 75, "5" = 100),
+    .names = "{.col}_pomp"))
+
+green_data <- 
+  green_data %>% 
+  rowwise() %>% 
+  mutate(
+    green_pomp = mean(c(green1_pomp,green2r_pomp,green3_pomp,green4_pomp,green5_pomp), na.rm = TRUE),
+    comp_pomp = mean(c(comp1_pomp,comp2_pomp,comp3_pomp,comp4_pomp,comp5_pomp,comp6r_pomp,comp7r_pomp, comp8r_pomp,comp9r_pomp,comp10r_pomp), na.rm = TRUE),
+    intel_pomp = mean(c(intel1_pomp,intel2_pomp,intel3_pomp,intel4_pomp,intel5_pomp,intel6_pomp,intel7r_pomp, intel8r_pomp,intel9r_pomp,intel10r_pomp), na.rm = TRUE),
+    open_pomp = mean(c(open1_pomp,open2_pomp,open3_pomp,open4_pomp,open5_pomp,open6_pomp,open7r_pomp, open8r_pomp,open9r_pomp,open10r_pomp), na.rm = TRUE)) 
+```
+
+  4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
+
+Environmental consciousness is normally distributed. Compassion and openness are skewed right. Intelligence has a bimodal distribution.
+
+```{r}
+ggplot(green_data) +
+  aes(x = green_pomp) +
+  geom_bar() +
+  theme_bw()
+
+ggplot(green_data) +
+  aes(x = comp_pomp) +
+  geom_bar() +
+  theme_bw()
+
+ggplot(green_data) +
+  aes(x = intel_pomp) +
+  geom_bar() +
+  theme_bw()
+
+ggplot(green_data) +
+  aes(x = open_pomp) +
+  geom_bar() +
+  theme_bw()
+```
+
+  5. Make scatterplots showing the relationships between **green reputation** and each personality trait.
+     Include trend lines for **students** and **non-students**.
+     What do these plots show?
+     
+Environmental consciousness is positively correlated with openness, intelligence, and compassion for both students and non-students. However, students reported higher levels of compassion and openness compared to non-students.
+     
+```{r}
+green_data %>% 
+  filter(!is.na(student)) %>% 
+  ggplot() +
+  aes(y = comp_pomp,
+      x = green_pomp,
+      group = student,
+      color = student,
+      fill = student) +
+  geom_jitter() +
+  geom_smooth(method = "lm")
+
+green_data %>% 
+  filter(!is.na(student)) %>% 
+  ggplot() +
+  aes(y = intel_pomp,
+      x = green_pomp,
+      group = student,
+      color = student,
+      fill = student) +
+  geom_jitter() +
+  geom_smooth(method = "lm")
+  
+green_data %>% 
+  filter(!is.na(student)) %>% 
+  ggplot() +
+  aes(y = open_pomp,
+      x = green_pomp,
+      group = student,
+      color = student,
+      fill = student) +
+  geom_jitter() +
+  geom_smooth(method = "lm")
+```
+     
+  6. Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
+  
+Student responses appear to have a normal distribution. Non-student reponses appear to have a bimodal distribution.
+  
+```{r}
+green_data %>%
+  filter(!is.na(student)) %>% 
+  ggplot() +
+    aes(y = student, x = green_pomp, na.omit, color = student) +
+    geom_jitter(height = 0.2) +
+    geom_boxplot(alpha = .5,
+               width = .1,
+               size = .5) +
+    ggdist::stat_slab(height = .3,
+                      position = position_nudge(y = .4))
+```
+  
+  
+  7. Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
+  
+On average, students report higher levels of environmental conciousness and intelligence compared to non-students. They also report lower levels of compassion and openness compared to non-students.
+  
+```{r}
+summary_green <- green_data %>% 
+  group_by(student) %>% 
+  summarize(green_mean = mean(green_pomp),
+            green_sd = sd(green_pomp),
+            green_median = median(green_pomp),
+            green_min = min(green_pomp),
+            green_max = max(green_pomp),
+            comp_mean = mean(comp_pomp),
+            comp_sd = sd(comp_pomp),
+            comp_median = median(comp_pomp),
+            comp_min = min(comp_pomp),
+            comp_max = max(comp_pomp),
+            intel_mean = mean(intel_pomp),
+            intel_sd = sd(intel_pomp),
+            intel_median = median(intel_pomp),
+            intel_min = min(intel_pomp),
+            intel_max = max(intel_pomp),
+            open_mean = mean(open_pomp),
+            open_sd = sd(open_pomp),
+            open_median = median(open_pomp),
+            open_min = min(open_pomp),
+            open_max = max(open_pomp))
+
+tibble(summary_green)
+```
+
