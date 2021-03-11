@@ -2,12 +2,21 @@
 title: "Beautifying RMarkdown"
 author: "Your Name Here"
 date: "1990-05-31"
-output: html_document
+output: 
+  html_document:
+    theme: flatly
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
+
+```{r}
+library(tidyverse)
+```
+
 
 ## The Surprising Truth about `mpg`
 
@@ -15,9 +24,44 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 
 Add a code chunk that uses the `ggplot2::mpg` dataset to plot `displ` against `hwy` (highway mpg), with points colored by `manufacturer` and shaped by `year`.
 
+```{r}
+ggplot2::mpg
+```
+```{r}
+ggplot2::mpg %>%
+  ggplot(aes
+         (x = displ, 
+          y = hwy,
+          color = manufacturer,
+           fill = manufacturer,
+           shape = as.factor(year))) +
+  geom_point(stat="identity", alpha=.8, width=.6) +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
 ### `mpg`: The Table
 
 Add a second code chunk that gives a summary table with the **mean** and **sd** for `displ` and `hwy` for each year.
+
+```{r}
+ggplot2::mpg %>%
+  group_by(year) %>%
+  summarize(displ_mean = mean(displ),
+            displ_sd = sd(displ),
+            hwy_mean = mean(hwy),
+            hwy_sd = sd(hwy))
+```
+
+
+```{r}
+ggplot2::mpg %>%
+  group_by(year) %>%
+  summarize(displ_mean = ~ mean(.x, na.rm = TRUE), 
+            displ_sd = ~ sd(.x, na.rm = TRUE))
+```
+
 
 Around each piece of output, add a brief description.
 
