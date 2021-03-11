@@ -1,0 +1,49 @@
+---
+title: 'Homework #4'
+author: "Samruddhi Shinde"
+date: "3/10/2021"
+output:
+  html_document: default
+  github_document: default
+---
+
+Load in packages
+
+```{r}
+library(here)
+library(tidyverse)
+```
+
+Load in dataset
+
+```{r}
+data <- read_csv(here("data", "prison_populations.csv"))
+```
+Summary table of national average of COVID-19 cases per month
+
+```{r}
+data %>%
+  summarize(national_avg_march = mean(march_pop),
+            national_avg_april = mean(april_pop),
+            national_avg_june = mean(june_pop),
+            national_avg_july = mean(july_pop),
+            national_avg_aug = mean(aug_pop),
+            national_avg_sept = mean(sept_pop),
+            national_avg_oct = mean(oct_pop),
+            national_avg_nov = mean(nov_pop))
+```
+
+Bar Graph of the Number of COVID-19 Cases in Prisons in November
+
+```{r}
+data %>%
+  ggplot(aes
+         (x = abbreviation, 
+          y = nov_pop,
+          color = abbreviation,
+           fill = abbreviation)) +
+  geom_bar(stat="identity", alpha=.8, width=.6) +
+  theme(axis.text.x  = element_text(angle=-90, hjust=0.5, size=7,colour="black")) +
+  ylab("Number of COVID-19 Cases in November") +
+  xlab("State")
+```
