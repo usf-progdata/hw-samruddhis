@@ -4,9 +4,10 @@ author: "Your Name Here"
 date: "1990-05-31"
 output: 
   html_document:
-    theme: flatly
-  pdf_document: default
-  word_document: default
+    theme: cosmo
+    highlight: zenburn
+    code_folding: show
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
@@ -58,8 +59,8 @@ ggplot2::mpg %>%
 ```{r}
 ggplot2::mpg %>%
   group_by(year) %>%
-  summarize(displ_mean = ~ mean(.x, na.rm = TRUE), 
-            displ_sd = ~ sd(.x, na.rm = TRUE))
+  summarize(across(c(displ, hwy),
+                   list(MN = mean, SD = sd)))
 ```
 
 
@@ -257,9 +258,9 @@ To render such output, set the `results` option to `'asis'`.
 Try it out! 
 Add `results='asis'` to this chunk and see how the output changes.
 
-```{r try out 'asis' output}
+```{r try out asis output}
 cat("$$
-\operatorname{mpg} = \alpha + \beta_{1}(\operatorname{cyl}) + \beta_{2}(\operatorname{disp}) + \epsilon
+\\operatorname{mpg} = \\alpha + \\beta_{1}(\\operatorname{cyl}) + \\beta_{2}(\\operatorname{disp}) + \\epsilon
 $$")
 ```
 
