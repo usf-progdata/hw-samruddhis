@@ -47,4 +47,3 @@ data %>%
   ylab("Number of COVID-19 Cases in November") +
   xlab("State")
 ```
-
