@@ -1,6 +1,6 @@
 ---
 title: "Consequences of Covid-19 for Candle Critiques"
-author: "Your Name Here"
+author: "Samruddhi Shinde"
 date: "3/22/2021"
 output: html_document
 ---
@@ -29,6 +29,12 @@ Each dataset contains the following information for the Top 3 selling scented or
 library(dplyr)
 ```
 
+```{r}
+scented_data <- readxl::read_xlsx("Scented_all.xlsx")
+
+unscented_data <- readxl::read_xlsx("Unscented_all.xlsx")
+```
+
 
 ## Part 1: Average daily ratings for scented and unscented candles
 
@@ -42,6 +48,14 @@ For each category of candle (scented versus unscented), for all days from **2017
   3. A smooth trend line (not linear; `method = "loess"`)
   4. A dashed vertical line at January 01, 2020
     1. Hint: use `geom_vline()` and set `xintercept = as.numeric(as.Date("2020-01-20"))`
+    
+```{r}
+scented_data %>%
+  ggplot() +
+  aes(x = as.Date(Date), y = Rating) +
+  geom_point() 
+```
+  
     
 Be sure to make the plots beautiful.
 
