@@ -50,12 +50,43 @@ For each category of candle (scented versus unscented), for all days from **2017
     1. Hint: use `geom_vline()` and set `xintercept = as.numeric(as.Date("2020-01-20"))`
     
 ```{r}
-scented_data %>%
+scented_data_av <- scented_data %>%
+  filter(Date > "2017-01-01") %>% 
+    group_by(Date) %>%
+    mutate(
+      DailyAvg = mean(Rating)
+    )
+```
+
+```{r}
+unscented_data_av <- unscented_data %>%
+  filter(Date > "2017-01-01") %>% 
+    group_by(Date) %>%
+    mutate(
+      DailyAvg = mean(Rating)
+    )
+```
+
+
+```{r}
+scented_data_av %>%
   ggplot() +
-  aes(x = as.Date(Date), y = Rating) +
-  geom_point() 
+  aes(x = as.Date(Date), y = DailyAvg) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "loess") +
+  geom_vline(xintercept = as.numeric(as.Date("2020-01-01")))
+  scale_x_date("Date", date_labels = "%m-%Y", date_breaks = "6 months")
 ```
   
+```{r}
+unscented_data_av  %>%
+  ggplot() +
+    aes(x = as.Date(Date), y = DailyAvg) +
+    geom_point(alpha = 0.1) +
+    geom_smooth(method = "loess") +
+    geom_vline(xintercept = as.numeric(as.Date("2020-01-01")))
+    scale_x_date("Date", date_labels = "%m-%Y", date_breaks = "6 months")
+```
     
 Be sure to make the plots beautiful.
 
