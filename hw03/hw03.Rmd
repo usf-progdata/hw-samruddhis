@@ -262,7 +262,7 @@ On average, students report higher levels of environmental conciousness and inte
 ```{r}
 summary_green <- green_data %>% 
   group_by(student) %>% 
-  summarize(green_mean = mean(green_pomp),
+  summarize(green_mean = mean(green_pomp), # BMW: There are NAs in the data, so you need to add na.rm = TRUE to all of these
             green_sd = sd(green_pomp),
             green_median = median(green_pomp),
             green_min = min(green_pomp),
