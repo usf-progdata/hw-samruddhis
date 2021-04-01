@@ -36,5 +36,9 @@ git rm --cached .DS_Store
 
 =======
 .DS_Store
+<<<<<<< Updated upstream
 >>>>>>> 06e4ee1c82172b631c76f63293487b849e7035d7
 >>>>>>> 94674758d1bc55e34bf3f29ddd27c63208385ec8
+=======
+.DS_Store
+>>>>>>> Stashed changes
