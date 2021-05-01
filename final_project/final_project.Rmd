@@ -21,8 +21,7 @@ staff_pop <- read_csv(here("data", "staff_populations.csv"))
 ```
 
 
-I am only looking at COVID-19 rates in Florida so I will be filtering the
-covid_prison_cases dataset. I am also only looking at staff & prisoner cases/deaths
+I am only looking at COVID-19 rates in Florida so I will be filtering the covid_prison_cases dataset. I am also only looking at staff & prisoner cases/deaths
 so I will be selecting the appropriate columns.
 
 ```{r}
@@ -59,8 +58,10 @@ staff_pop %>%
 ```
 
 ```{r}
-florida_covid_cases <- covid_prison_cases %>%
-  filter(name == "Florida") %>%
-  select(total_staff_cases, total_staff_deaths, total_prisoner_cases, total_prisoner_deaths, as_of_date)
+florida_covid_cases %>%
+  ggplot(aes
+         (x = as_of_date, y = total_staff_cases)) +
+  geom_point() 
+      
 ```
 
