@@ -1,0 +1,66 @@
+---
+title: "Final Project"
+author: "Samruddhi Shinde"
+date: "5/1/2021"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(here)
+library(tidyverse)
+```
+
+```{r}
+prison_pop <- read_csv(here("data", "prison_populations.csv"))
+covid_prison_cases <- read_csv(here("data", "covid_prison_cases.csv"))
+staff_pop <- read_csv(here("data", "staff_populations.csv"))
+```
+
+
+I am only looking at COVID-19 rates in Florida so I will be filtering the
+covid_prison_cases dataset. I am also only looking at staff & prisoner cases/deaths
+so I will be selecting the appropriate columns.
+
+```{r}
+florida_covid_cases <- covid_prison_cases %>%
+  filter(name == "Florida") %>%
+  select(total_staff_cases, total_staff_deaths, total_prisoner_cases, total_prisoner_deaths, as_of_date)
+```
+
+```{r}
+florida_staff_pop <- staff_pop %>%
+  filter(name == "Florida") %>%
+  select(april_pop, as_of_date)
+```
+
+```{r}
+florida_prison_pop <- prison_pop %>%
+  filter(name == "Florida")
+```
+
+I renamed the staff population column in the staff_pop dataset because I plan to
+merge this dataset with the prison_pop data_set and it had a column with the 
+same name.
+
+```{r}
+staff_pop %>%
+  rename(
+    staff_april_pop = april_pop
+  )
+```
+
+```{r}
+#combined_data <- full_join(staff_pop, prison_pop, by = c("name", "abbreviation")) #%>%
+#  full_join(covid_prison_cases, by = c("name", "abbreviation"))
+```
+
+```{r}
+florida_covid_cases <- covid_prison_cases %>%
+  filter(name == "Florida") %>%
+  select(total_staff_cases, total_staff_deaths, total_prisoner_cases, total_prisoner_deaths, as_of_date)
+```
+
