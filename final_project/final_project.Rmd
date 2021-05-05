@@ -9,7 +9,7 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Loaduing packages
+Loading packages
 
 ```{r}
 library(here)
@@ -43,22 +43,6 @@ cali_staff_pop <- staff_pop %>%
 cali_prison_pop <- prison_pop %>%
   filter(name == "California") %>%
   select(name, march_pop, april_pop, june_pop, july_pop, aug_pop, sept_pop, oct_pop, nov_pop)
-```
-
-<!-- I renamed the staff population column in the staff_pop dataset because I plan to -->
-<!-- merge this dataset with the prison_pop data_set and it had a column with the  -->
-<!-- same name. -->
-
-```{r}
-# staff_pop %>%
-#   rename(
-#     staff_april_pop = april_pop
-#   )
-```
-
-```{r}
-#combined_data <- full_join(staff_pop, prison_pop, by = c("name", "abbreviation")) #%>%
-#  full_join(covid_prison_cases, by = c("name", "abbreviation"))
 ```
 
 --------------------------------------------------------------------------------
@@ -121,3 +105,10 @@ march2021_covid_cases %>%
   theme(legend.title = element_blank())
 ```
 
+```{r}
+cali_march2021_deaths <- march2021_covid_cases %>%
+  filter(name == "California") %>%
+  select(total_staff_deaths, total_prisoner_deaths)
+
+cali_march2021_deaths <- as.data.frame(t(cali_march2021_deaths))
+```
