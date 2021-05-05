@@ -107,9 +107,22 @@ march2021_covid_cases %>%
 
 Deaths in California in March 2021
 ```{r}
-cali_march2021_deaths <- march2021_covid_cases %>%
+cali_deaths <- covid_prison_cases %>%
   filter(name == "California") %>%
-  select(total_staff_deaths, total_prisoner_deaths)
+  select(total_staff_deaths, total_prisoner_deaths, as_of_date) %>%
+  filter(as_of_date)
 
-cali_march2021_deaths <- as.data.frame(t(cali_march2021_deaths))
+# cali_march2021_deaths <- as.data.frame(t(cali_march2021_deaths))
+
+# cali_column_names <- data.frame("Type", "Number of Deaths")
+# 
+# cali_march2021_deaths <- merge(cali_march2021_deaths, cali_march2021_deaths)
 ```
+
+```{r}
+cali_march2021_deaths %>%
+  ggplot(aes
+         (y = total_staff_deaths, x = total)) +
+  geom_bar()
+```
+
