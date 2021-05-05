@@ -65,3 +65,15 @@ florida_covid_cases %>%
       
 ```
 
+```{r}
+florida_covid_cases %>%
+  summarize(Average_Staff_Cases = mean(total_staff_cases, na.rm = TRUE),
+            SD_Staff_Cases = sd(total_staff_cases, na.rm = TRUE),
+            Average_Staff_Deaths = mean(total_staff_deaths, na.rm = TRUE),
+            SD_Staff_Deaths = sd(total_staff_deaths, na.rm = TRUE),
+            Average_Prisoner_Cases = mean(total_prisoner_cases, na.rm = TRUE),
+            SD_Prisoner_Cases = sd(total_prisoner_cases, na.rm = TRUE),
+            Average_Prisoner_Deaths = mean(total_prisoner_deaths, na.rm = TRUE),
+            SD_Prisoner_Deaths = sd(total_prisoner_deaths, na.rm = TRUE))
+```
+
