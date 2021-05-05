@@ -9,10 +9,14 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Loaduing packages
+
 ```{r}
 library(here)
 library(tidyverse)
 ```
+
+Loading in Datasets
 
 ```{r}
 prison_pop <- read_csv(here("data", "prison_populations.csv"))
@@ -20,36 +24,36 @@ covid_prison_cases <- read_csv(here("data", "covid_prison_cases.csv"))
 staff_pop <- read_csv(here("data", "staff_populations.csv"))
 ```
 
-
-I am only looking at COVID-19 rates in Florida so I will be filtering the covid_prison_cases dataset. I am also only looking at staff & prisoner cases/deaths
+I am only looking at COVID-19 rates in California so I will be filtering the covid_prison_cases dataset. I am also only looking at staff & prisoner cases/deaths
 so I will be selecting the appropriate columns.
 
 ```{r}
-florida_covid_cases <- covid_prison_cases %>%
-  filter(name == "Florida") %>%
+cali_covid_cases <- covid_prison_cases %>%
+  filter(name == "California") %>%
   select(total_staff_cases, total_staff_deaths, total_prisoner_cases, total_prisoner_deaths, as_of_date)
 ```
 
 ```{r}
-florida_staff_pop <- staff_pop %>%
-  filter(name == "Florida") %>%
+cali_staff_pop <- staff_pop %>%
+  filter(name == "California") %>%
   select(april_pop, as_of_date)
 ```
 
 ```{r}
-florida_prison_pop <- prison_pop %>%
-  filter(name == "Florida")
+cali_prison_pop <- prison_pop %>%
+  filter(name == "California") %>%
+  select(name, march_pop, april_pop, june_pop, july_pop, aug_pop, sept_pop, oct_pop, nov_pop)
 ```
 
-I renamed the staff population column in the staff_pop dataset because I plan to
-merge this dataset with the prison_pop data_set and it had a column with the 
-same name.
+<!-- I renamed the staff population column in the staff_pop dataset because I plan to -->
+<!-- merge this dataset with the prison_pop data_set and it had a column with the  -->
+<!-- same name. -->
 
 ```{r}
-staff_pop %>%
-  rename(
-    staff_april_pop = april_pop
-  )
+# staff_pop %>%
+#   rename(
+#     staff_april_pop = april_pop
+#   )
 ```
 
 ```{r}
@@ -57,16 +61,12 @@ staff_pop %>%
 #  full_join(covid_prison_cases, by = c("name", "abbreviation"))
 ```
 
-```{r}
-florida_covid_cases %>%
-  ggplot(aes
-         (x = as_of_date, y = total_staff_cases)) +
-  geom_point() 
-      
-```
+--------------------------------------------------------------------------------
+
+Summary table of average & sd of staff cases/deaths and prisoner cases/deaths
 
 ```{r}
-florida_covid_cases %>%
+cali_covid_cases %>%
   summarize(Average_Staff_Cases = mean(total_staff_cases, na.rm = TRUE),
             SD_Staff_Cases = sd(total_staff_cases, na.rm = TRUE),
             Average_Staff_Deaths = mean(total_staff_deaths, na.rm = TRUE),
@@ -75,5 +75,49 @@ florida_covid_cases %>%
             SD_Prisoner_Cases = sd(total_prisoner_cases, na.rm = TRUE),
             Average_Prisoner_Deaths = mean(total_prisoner_deaths, na.rm = TRUE),
             SD_Prisoner_Deaths = sd(total_prisoner_deaths, na.rm = TRUE))
+```
+
+Scatter Plot for total prisoner cases per date
+
+```{r}
+cali_covid_cases %>%
+  ggplot(aes
+         (x = as_of_date,
+           y = total_prisoner_cases)) +
+  geom_point() +
+  # scale_x_date(name = "Date",
+  #              date_breaks = "12 months",
+  #              date_labels = "%m-%Y") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_x_discrete(labels=c("01/05/2021" = "January 2021"))
+
+      
+```
+
+--------------------------------------------------------------------------------
+Data Set of Covid-19 Cases for every State in March 2021
+```{r}
+march2021_covid_cases <- covid_prison_cases %>%
+  filter(as_of_date == "03/01/2021"| 
+        as_of_date =="03/02/2021"| 
+        as_of_date =="03/03/2021"| 
+        as_of_date == "03/04/2021"| 
+        as_of_date =="03/05/2021") 
+```
+
+
+Bar plot Covid-19 Cases for every State in March 2021
+```{r}
+march2021_covid_cases %>%
+  ggplot(aes
+         (x = abbreviation, 
+          y = total_prisoner_cases,
+          color = abbreviation,
+           fill = abbreviation)) +
+  geom_bar(stat="identity", alpha=.8, width=.6) +
+  theme(axis.text.x  = element_text(angle=-90, hjust=0.5, size=7,colour="black")) +
+  ylab("Number of COVID-19 Cases in March 2021") +
+  xlab("State") +
+  theme(legend.title = element_blank())
 ```
 
