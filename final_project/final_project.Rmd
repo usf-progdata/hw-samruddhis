@@ -105,6 +105,7 @@ march2021_covid_cases %>%
   theme(legend.title = element_blank())
 ```
 
+Deaths in California in March 2021
 ```{r}
 cali_march2021_deaths <- march2021_covid_cases %>%
   filter(name == "California") %>%
