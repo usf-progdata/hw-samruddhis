@@ -1,0 +1,129 @@
+---
+title: "Final Project"
+author: "Samruddhi Shinde"
+date: "5/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading packages
+
+```{r}
+library(here)
+library(tidyverse)
+```
+
+Loading in Dataset
+
+```{r}
+covid_prison_cases <- read_csv(here("data", "covid_prison_cases.csv"))
+```
+
+This dataset explores COVID-19 data in prisons across the United States. 
+
+Data Set of Covid-19 Cases for every State in March 2021
+```{r}
+march2021_covid_cases <- covid_prison_cases %>%
+  filter(as_of_date == "03/01/2021"| 
+        as_of_date =="03/02/2021"| 
+        as_of_date =="03/03/2021"| 
+        as_of_date == "03/04/2021"| 
+        as_of_date =="03/05/2021") 
+```
+
+Bar plot Covid-19 Cases for every State in March 2021
+```{r}
+march2021_covid_cases %>%
+  ggplot(aes
+         (x = abbreviation, 
+          y = total_prisoner_cases,
+          color = abbreviation,
+           fill = abbreviation)) +
+  geom_bar(stat="identity", alpha=.8, width=.6) +
+  theme(axis.text.x  = element_text(angle=-90, hjust=0.5, size=7,colour="black")) +
+  ggtitle("COVID-19 Cases in US Prisoners in March 2021") +
+  ylab("Number of Cases") +
+  xlab("State") +
+  theme(legend.title = element_blank())
+```
+This bar graph shows that California and federal prisons had the highest cases of COVID-19 in prisoners in March 2021.
+
+
+```{r}
+us_covid_stats <- march2021_covid_cases %>%
+  summarize(Average_Staff_Cases = mean(total_staff_cases, na.rm = TRUE),
+            Min_Staff_Cases = min(total_staff_cases, na.rm = TRUE),
+            Max_Staff_Cases = max(total_staff_cases, na.rm = TRUE),
+            Average_Staff_Deaths = mean(total_staff_deaths, na.rm = TRUE),
+            Min_Staff_Deaths = min(total_staff_deaths, na.rm = TRUE),
+            Max_Staff_Deaths = max(total_staff_deaths, na.rm = TRUE),
+            Average_Prisoner_Cases = mean(total_prisoner_cases, na.rm = TRUE),
+            Min_Prisoner_Cases = min(total_prisoner_cases, na.rm = TRUE),
+            Maz_Prisoner_Cases = max(total_prisoner_cases, na.rm = TRUE),
+            Average_Prisoner_Deaths = mean(total_prisoner_deaths, na.rm = TRUE),
+            Min_Prisoner_Deaths = min(total_prisoner_deaths, na.rm = TRUE),
+            Max_Prisoner_Deaths = max(total_prisoner_deaths, na.rm = TRUE))
+
+tibble(us_covid_stats)
+```
+This table shows that on average, prisoners have higher case & death rates compared to staff.
+
+
+Filtering the covid_prison_cases dataset for California statistics 
+Also only looking at staff & prisoner cases/deaths
+
+```{r}
+cali_covid_cases <- covid_prison_cases %>%
+  filter(name == "California") %>%
+  select(total_staff_cases, total_staff_deaths, total_prisoner_cases, total_prisoner_deaths, as_of_date)
+```
+
+Summary table of average & sd of staff cases/deaths and prisoner cases/deaths
+
+```{r}
+cali_covid_stats <- cali_covid_cases %>%
+  summarize(Average_Staff_Cases = mean(total_staff_cases, na.rm = TRUE),
+            Min_Staff_Cases = min(total_staff_cases, na.rm = TRUE),
+            Max_Staff_Cases = max(total_staff_cases, na.rm = TRUE),
+            Average_Staff_Deaths = mean(total_staff_deaths, na.rm = TRUE),
+            Min_Staff_Deaths = min(total_staff_deaths, na.rm = TRUE),
+            Max_Staff_Deaths = max(total_staff_deaths, na.rm = TRUE),
+            Average_Prisoner_Cases = mean(total_prisoner_cases, na.rm = TRUE),
+            Min_Prisoner_Cases = min(total_prisoner_cases, na.rm = TRUE),
+            Maz_Prisoner_Cases = max(total_prisoner_cases, na.rm = TRUE),
+            Average_Prisoner_Deaths = mean(total_prisoner_deaths, na.rm = TRUE),
+            Min_Prisoner_Deaths = min(total_prisoner_deaths, na.rm = TRUE),
+            Max_Prisoner_Deaths = max(total_prisoner_deaths, na.rm = TRUE))
+
+tibble(cali_covid_stats)
+```
+This table shows that on average, prisoners in California have higher case & death rates compared to staff.
+
+Filtering data to only look at 2020 cases
+
+```{r}
+cali_2020covid_cases <- cali_covid_cases[-c(1:9),]
+```
+
+Scatter Plot for total prisoner cases per date
+
+```{r}
+cali_2020covid_cases %>%
+  ggplot(aes
+         (x = as_of_date,
+           y = total_prisoner_cases)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggtitle("COVID-19 Cases in Califronia Prisoners in 2020") +
+  ylab("Total Number of Cases") +
+  xlab("Date") 
+```
+
+This scatter plot shows the trend of increasing COVID-19 cases in prisoners during 2020.
