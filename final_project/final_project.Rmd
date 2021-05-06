@@ -3,6 +3,7 @@ title: "Final Project"
 author: "Samruddhi Shinde"
 date: "5/1/2021"
 output:
+  word_document: default
   html_document:
     df_print: paged
 ---
